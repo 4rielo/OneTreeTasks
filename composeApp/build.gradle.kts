@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -29,6 +32,10 @@ kotlin {
     }
     
     jvm("desktop")
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
     
     sourceSets {
         val desktopMain by getting
@@ -36,20 +43,47 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
+
+            implementation(libs.compass.permissions.mobile)
+            implementation(libs.compass.geolocation.mobile)
         }
+
+        iosMain.dependencies {
+            implementation(libs.compass.permissions.mobile)
+            implementation(libs.compass.geolocation.mobile)
+        }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+
+            implementation(libs.jetbrains.compose.navigation)
+
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+
+            implementation(libs.compass.geolocation)
         }
+        
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        dependencies {
+            ksp(libs.androidx.room.compiler)
         }
     }
 }
@@ -67,6 +101,7 @@ android {
     }
     packaging {
         resources {
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
@@ -82,6 +117,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.identity.jvm)
     debugImplementation(compose.uiTooling)
 }
 

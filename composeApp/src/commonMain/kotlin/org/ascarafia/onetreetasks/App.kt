@@ -1,36 +1,37 @@
 package org.ascarafia.onetreetasks
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import org.ascarafia.onetreetasks.ui.task_list.CreateTaskScreen
+import org.ascarafia.onetreetasks.ui.task_list.TaskDetailScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import onetreetasks.composeapp.generated.resources.Res
-import onetreetasks.composeapp.generated.resources.compose_multiplatform
+import org.ascarafia.onetreetasks.ui.task_list.TaskListScreen
+import org.ascarafia.onetreetasks.ui.task_list.TaskListViewModel
+import org.ascarafia.onetreetasks.ui.theme.AppTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
+    val navController = rememberNavController()
+    val taskViewModel: TaskListViewModel = koinViewModel<TaskListViewModel>()
+
+    AppTheme {
+        NavHost(navController = navController, startDestination = "taskList") {
+            composable("taskList") {
+                TaskListScreen(navController, taskViewModel)
+                taskViewModel.getDatabaseTasks()
             }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
+
+            composable("taskDetail/{taskId}") { backStackEntry ->
+                val taskId = backStackEntry.arguments?.getString("taskId")
+                TaskDetailScreen(navController, taskId, taskViewModel)
+            }
+
+            composable("createTask") {
+                CreateTaskScreen(navController, taskViewModel)
             }
         }
     }
