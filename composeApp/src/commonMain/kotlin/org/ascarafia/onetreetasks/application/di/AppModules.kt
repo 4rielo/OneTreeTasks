@@ -1,6 +1,8 @@
 package org.ascarafia.onetreetasks.application.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import org.ascarafia.onetreetasks.application.location.LocationProvider
+import org.ascarafia.onetreetasks.application.location.LocationProviderFactory
 import org.ascarafia.onetreetasks.data.database.DataBaseFactory
 import org.ascarafia.onetreetasks.data.database.TaskDatabase
 import org.ascarafia.onetreetasks.domain.repository.TaskRepository
@@ -15,7 +17,7 @@ val appModules: List<Module> get() = sharedModules + platformModule
 
 expect val platformModule: Module
 
-val sharedModules: List<Module> get() = listOf( viewModelsModule, dataBaseModule, repositoryModule )
+val sharedModules: List<Module> get() = listOf( viewModelsModule, dataBaseModule, repositoryModule, hardwareModule )
 
 val viewModelsModule = module {
     viewModelOf(::TaskListViewModel)
@@ -34,4 +36,10 @@ val dataBaseModule = module {
 
 val repositoryModule = module {
     singleOf(::TaskRepositoryImpl).bind<TaskRepository>()
+}
+
+val hardwareModule = module {
+    single {
+        get<LocationProviderFactory>().create()
+    }.bind<LocationProvider>()
 }

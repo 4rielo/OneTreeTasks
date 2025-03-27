@@ -45,7 +45,16 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+
+            implementation(libs.compass.permissions.mobile)
+            implementation(libs.compass.geolocation.mobile)
         }
+
+        iosMain.dependencies {
+            implementation(libs.compass.permissions.mobile)
+            implementation(libs.compass.geolocation.mobile)
+        }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -64,7 +73,10 @@ kotlin {
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            implementation(libs.compass.geolocation)
         }
+        
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
