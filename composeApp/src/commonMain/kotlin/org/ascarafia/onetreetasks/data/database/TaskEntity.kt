@@ -1,17 +1,20 @@
-package org.ascarafia.onetreetasks.domain.model
+package org.ascarafia.onetreetasks.data.database
 
-import org.ascarafia.onetreetasks.data.database.TaskEntity
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import org.ascarafia.onetreetasks.domain.model.Task
 
-data class Task(
-    val id: String,
+@Entity
+data class TaskEntity (
+    @PrimaryKey(autoGenerate = false) val id: String,
     val title: String,
     val body: String,
     val isCompleted: Boolean,
     val latitude: Double? = null,
     val longitude: Double? = null
 ) {
-    fun toTaskEntity(): TaskEntity {
-        return TaskEntity(
+    fun toTask(): Task {
+        return Task(
             id = id,
             body = body,
             title = title,
