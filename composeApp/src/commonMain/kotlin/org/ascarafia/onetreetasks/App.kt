@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import org.ascarafia.onetreetasks.ui.task_list.CreateTaskScreen
 import org.ascarafia.onetreetasks.ui.task_list.TaskDetailScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.ascarafia.onetreetasks.ui.task_list.TaskListScreen
@@ -27,6 +28,10 @@ fun App() {
             composable("taskDetail/{taskId}") { backStackEntry ->
                 val taskId = backStackEntry.arguments?.getString("taskId")
                 TaskDetailScreen(navController, taskId, taskViewModel)
+            }
+
+            composable("createTask") {
+                CreateTaskScreen(navController, taskViewModel)
             }
         }
     }
