@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import org.ascarafia.onetreetasks.application.location.LocationProvider
 import org.ascarafia.onetreetasks.domain.model.Task
 import org.ascarafia.onetreetasks.domain.repository.TaskRepository
 
 class TaskListViewModel(
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val locationProvider: LocationProvider
 ): ViewModel() {
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
     val tasks = _tasks.asStateFlow()
@@ -24,7 +26,14 @@ class TaskListViewModel(
     fun addTask(task: Task) {
         viewModelScope.launch {
             try {
-                taskRepository.addTask(task)
+                val location = locationProvider.getCurrentLocation()
+
+                val geoTask = task.copy(
+                    latitude = location?.coordinates?.latitude,
+                    longitude = location?.coordinates?.longitude
+                )
+
+                taskRepository.addTask(geoTask)
             } catch (_: Exception) {
                 //TODO: handle error/exception. Maybe report to Mixpannel or other service.
             }
