@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import onetreetasks.composeapp.generated.resources.Res
 import onetreetasks.composeapp.generated.resources.*
 import org.ascarafia.onetreetasks.domain.model.Task
+import org.ascarafia.onetreetasks.ui.task_list.views.SwipeToDeleteItem
 import org.jetbrains.compose.resources.stringResource
 import org.ascarafia.onetreetasks.ui.task_list.views.TaskItem
 
@@ -65,13 +66,16 @@ fun TaskListScreen(navController: NavController, viewModel: TaskListViewModel = 
                         items = tasks,
                         key = { it.id }
                     ) { task ->
-                        TaskItem(
+                        SwipeToDeleteItem(
                             task = task,
                             onTaskCheckedChange = { isChecked ->
                                 viewModel.toggleTaskCompletion(task.id)
                             },
                             onClick = {
                                 navController.navigate("taskDetail/${task.id}")
+                            },
+                            onDelete = {
+                                viewModel.deleteTask(task)
                             }
                         )
                     }
