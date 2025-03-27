@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -29,6 +32,10 @@ kotlin {
     }
     
     jvm("desktop")
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
     
     sourceSets {
         val desktopMain by getting
@@ -54,10 +61,17 @@ kotlin {
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        dependencies {
+            ksp(libs.androidx.room.compiler)
         }
     }
 }
@@ -75,6 +89,7 @@ android {
     }
     packaging {
         resources {
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
@@ -90,6 +105,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.identity.jvm)
     debugImplementation(compose.uiTooling)
 }
 

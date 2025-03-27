@@ -71,7 +71,7 @@ fun TaskListScreen(navController: NavController, viewModel: TaskListViewModel = 
                                 viewModel.toggleTaskCompletion(task.id)
                             },
                             onClick = {
-                                //TODO: go to item detail
+                                navController.navigate("taskDetail/${task.id}")
                             }
                         )
                     }
