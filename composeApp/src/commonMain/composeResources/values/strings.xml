@@ -2,4 +2,7 @@
 
 <resources>
     <string name="task_list_title">Tareas: </string>
+
+    <string name="task_detail_title">Detalle de la Tarea: </string>
+
 </resources>
