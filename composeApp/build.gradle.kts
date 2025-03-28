@@ -85,6 +85,12 @@ kotlin {
         dependencies {
             ksp(libs.androidx.room.compiler)
         }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(kotlin("test-annotations-common"))
+            implementation(libs.kotlinx.coroutines.test)
+        }
     }
 }
 
